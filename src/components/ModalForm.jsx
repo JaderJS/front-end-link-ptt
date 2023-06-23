@@ -3,8 +3,10 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 const ModalForm = ({ title, show, setShow, children }) => {
 
+    const [data, setData] = useState()
+
     const toggle = () => {
-        setShow(!show);
+        setShow(false);
     };
     return (
         <div>
