@@ -3,27 +3,51 @@ import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Form, Row, Col, FormGroup, Label, Input, Button } from 'reactstrap'
 
-const FormRegisterEstation = ({ data, setData, show, setShow }) => {
-
+const FormRegisterEstation = ({ submit, setSubmit, setResponse }) => {
+    const [data, setData] = useState()
     const { register, handleSubmit, setValue, watch, errors } = useForm()
-    const selectedType = watch('type');
+    const selectedType = watch('estation[0].type');
     const selectedSilent = watch('estation[0].config.silent');
     // react select e controller
 
-    const onSubmit = data => {
+    const onSubmit = async data => {
         setData(() => data);
-        api.post('/station/properties').then((response => console.log(response))).catch((error) => console.log(error))
+        await api.post('/station/properties', data).then((response => {
+            setResponse(response.response);
+        })).catch((error) => {
+            setResponse(error.response);
+        })
+        setSubmit(false);
     }
 
     const handleInputChange = (name, value) => {
         setValue(name, value);
     };
 
+    const formData = {
+        property: "Fazenda Mariah",
+        gerency: "Mariah",
+        estation: [
+            {
+                lat: "18.1234",
+                long: "53.1234",
+                freqRx: 155.55,
+                freqTx: 155.55,
+                type: "digital",
+                config: {
+                    colorCode: 0,
+                    slot: 1
+                }
+            }
+        ],
+        description: "Comentario",
+    }
+
     useEffect(() => {
-        handleSubmit(onSubmit)()
-        if (show) {
+        if (submit) {
+            handleSubmit(onSubmit)()
         }
-    }, [show])
+    }, [submit])
 
     useEffect(() => {
         console.log(data)
@@ -31,16 +55,23 @@ const FormRegisterEstation = ({ data, setData, show, setShow }) => {
 
     const required = { required: false }
     return (
-        <Form>
-            <h4>Cadastro de estação</h4>
+        <Form onSubmit={onSubmit}>
             <FormGroup floating>
-                <Input {...register("property", required)} placeholder="Propriedade" />
+                <Input
+                    {...register("property", required)} placeholder="Propriedade"
+                    onChange={(e) => handleInputChange('property', e.target.value)}
+                    defaultValue={formData.property}
+                />
                 <Label>
                     Propriedade
                 </Label>
             </FormGroup>
             <FormGroup floating>
-                <Input {...register("gerency", required)} placeholder="Gerente" />
+                <Input
+                    {...register("gerency", required)} placeholder="Gerente"
+                    onChange={(e) => handleInputChange('gerency', e.target.value)}
+                    defaultValue={formData.gerency}
+                />
                 <Label>
                     Gerente
                 </Label>
@@ -48,7 +79,9 @@ const FormRegisterEstation = ({ data, setData, show, setShow }) => {
             <FormGroup floating>
                 <Input type='select'
                     name='type'
-                    onChange={(e) => handleInputChange('type', e.target.value)}>
+                    onChange={(e) => handleInputChange('estation[0].type', e.target.value)}
+                    defaultValue={formData.estation[0].type}
+                >
                     <option value="">...</option>
                     <option value="digital">Digital</option>
                     <option value="analog">Analogico</option>
@@ -60,7 +93,11 @@ const FormRegisterEstation = ({ data, setData, show, setShow }) => {
             <Row>
                 <Col>
                     <FormGroup floating>
-                        <Input {...register("estation[0].lat", required)} placeholder="Latitude" />
+                        <Input
+                            {...register("estation[0].lat", required)} placeholder="Latitude"
+                            onChange={(e) => handleInputChange('estation[0].lat', e.target.value)}
+                            defaultValue={formData.estation[0].lat}
+                        />
                         <Label>
                             Latitude
                         </Label>
@@ -68,7 +105,11 @@ const FormRegisterEstation = ({ data, setData, show, setShow }) => {
                 </Col>
                 <Col>
                     <FormGroup floating>
-                        <Input {...register("estation[0].long", required)} placeholder="Longitude" />
+                        <Input
+                            {...register("estation[0].long", required)} placeholder="Longitude"
+                            onChange={(e) => handleInputChange('estation[0].long', e.target.value)}
+                            defaultValue={formData.estation[0].long}
+                        />
                         <Label>
                             Longitude
                         </Label>
@@ -78,7 +119,11 @@ const FormRegisterEstation = ({ data, setData, show, setShow }) => {
             <Row>
                 <Col>
                     <FormGroup floating>
-                        <Input {...register("estation[0].freqRx", required)} placeholder="Frequência RX" />
+                        <Input
+                            {...register("estation[0].freqRx", required)} placeholder="Frequência RX"
+                            onChange={(e) => handleInputChange('estation[0].freqRx', e.target.value)}
+                            defaultValue={formData.estation[0].freqRx}
+                        />
                         <Label>
                             Frequência RX
                         </Label>
@@ -86,7 +131,11 @@ const FormRegisterEstation = ({ data, setData, show, setShow }) => {
                 </Col>
                 <Col>
                     <FormGroup floating>
-                        <Input {...register("estation[0].freqTx", required)} placeholder="Frequência TX" />
+                        <Input
+                            {...register("estation[0].freqTx", required)} placeholder="Frequência TX"
+                            onChange={(e) => handleInputChange('estation[0].freqTx', e.target.value)}
+                            defaultValue={formData.estation[0].freqTx}
+                        />
                         <Label>
                             Frequência TX
                         </Label>
@@ -97,9 +146,12 @@ const FormRegisterEstation = ({ data, setData, show, setShow }) => {
                 selectedType === "digital" && (
                     <>
                         <FormGroup floating>
-                            <Input type='select'
+                            <Input
+                                type='select'
                                 {...register("estation[0].config.slot", required)} placeholder="Slot"
-                                onChange={(e) => handleInputChange('estation[0].config.slot', e.target.value)}>
+                                onChange={(e) => handleInputChange('estation[0].config.slot', e.target.value)}
+                                defaultValue={formData.estation[0].config.slot}
+                            >
                                 {[0, 1, 2].map((val) => <option key={val} value={val}>{val}</option>)}
                             </Input>
                             <Label>
@@ -110,7 +162,9 @@ const FormRegisterEstation = ({ data, setData, show, setShow }) => {
                             <Input
                                 type='select'
                                 {...register("estation[0].config.colorCode", required)} placeholder="colorCode"
-                                onChange={(e) => handleInputChange('estation[0].config.colorCode', e.target.value)}>
+                                onChange={(e) => handleInputChange('estation[0].config.colorCode', e.target.value)}
+                                defaultValue={formData.estation[0].config.colorCode}
+                                >
                                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((val) => <option key={val} value={val}>{val}</option>)}
                             </Input>
                             <Label>
@@ -140,13 +194,15 @@ const FormRegisterEstation = ({ data, setData, show, setShow }) => {
                             {selectedSilent !== "CSQ" &&
                                 (<>
                                     <FormGroup floating>
-                                        <Input {...register("estation[0].config.encoder", required)} placeholder="Encoder" />
+                                        <Input {...register("estation[0].config.encoder", required)} placeholder="Encoder"
+                                            onChange={(e) => handleInputChange('estation[0].config.encoder', e.target.value)} />
                                         <Label>
                                             Encoder
                                         </Label>
                                     </FormGroup>
                                     <FormGroup floating>
-                                        <Input {...register("estation[0].config.decoder", required)} placeholder="Decoder" />
+                                        <Input {...register("estation[0].config.decoder", required)} placeholder="Decoder"
+                                            onChange={(e) => handleInputChange('estation[0].config.decoder', e.target.value)} />
                                         <Label>
                                             Decoder
                                         </Label>
@@ -158,14 +214,13 @@ const FormRegisterEstation = ({ data, setData, show, setShow }) => {
                 )
             }
             <FormGroup floating>
-                <Input type='area' {...register("description")} placeholder="Descrição" />
+                <Input type='area' {...register("description")} placeholder="Descrição"
+                    onChange={(e) => handleInputChange('description', e.target.value)} />
                 <Label>
                     Descrição
                 </Label>
             </FormGroup>
 
-            {/* <input type="submit" /> */}
-            <Button title="Submit" onClick={handleSubmit(onSubmit)} >Submit</Button>
         </Form >
 
     )
