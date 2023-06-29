@@ -8,8 +8,9 @@ import NotFound from './pages/NotFound';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
-import Estations from './pages/Estations';
+import Property from './pages/Property';
 import TreeView from './components/TreeView';
+import PropertyFocus from './pages/PropertyFocus';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -17,7 +18,8 @@ root.render(
     <Router>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/estations" element={<Estations />} />
+        <Route path="/propertys" element={<Property />} />
+        <Route path="/station/propertie" element={<PropertyFocus />} />
         <Route path="/treeview" element={<TreeView />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

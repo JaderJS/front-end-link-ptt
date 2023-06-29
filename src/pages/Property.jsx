@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import Main from '../components/Main'
-import Map from '../components/Map'
-import ModalForm from '../components/ModalForm'
-import { Button } from 'reactstrap'
-import FormRegisterEstation from '../components/FormRegisterEstation'
-import api from '../services/axios'
-import ModalError from '../components/ModalError'
+import { Button, Row } from 'reactstrap'
 
-const Estations = () => {
+import api from '../services/axios'
+
+import Main from '../components/Main'
+import ModalForm from '../components/ModalForm'
+import FormRegisterEstation from '../components/FormRegisterEstation'
+import Map from '../components/Map'
+import ModalError from '../components/ModalError'
+import CardStation from '../components/CardStation'
+
+const Property = () => {
     const [showError, setShowError] = useState(false)
     const [show, setShow] = useState(false)
     const [error, setError] = useState()
@@ -15,7 +18,7 @@ const Estations = () => {
     const [submit, setSubmit] = useState(false)
     const [response, setResponse] = useState("")
 
-    const [data, setData] = useState()
+    const [data, setData] = useState([])
 
     const getStations = async () => {
         await api.get('/station/properties').then((response) => {
@@ -34,8 +37,12 @@ const Estations = () => {
 
     return (
         <Main>
-            {/* <Map coordinates={[51.505, -0.09]} /> */}
             <Button onClick={() => setShow(true)}>Novo registro</Button>
+            <Row>
+                {data.map((data) => (
+                    <CardStation data={data} />
+                ))}
+            </Row>
             <ModalError showError={showError} setShowError={setShowError} error={error} />
             <ModalForm
                 title={"Cadastro estação"}
@@ -56,4 +63,4 @@ const Estations = () => {
     )
 }
 
-export default Estations
+export default Property

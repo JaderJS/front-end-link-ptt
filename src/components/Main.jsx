@@ -26,7 +26,7 @@ const Main = ({ children }) => {
                                 <NavLink href="/">Home</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink href="/estations">Estações</NavLink>
+                                <NavLink href="/propertys">Estações</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink href="/treeview">Tree view</NavLink>

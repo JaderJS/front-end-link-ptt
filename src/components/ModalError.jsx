@@ -7,14 +7,12 @@ const ModalError = ({ showError, setShowError, error }) => {
 
     return (
         <>
-            {error && <Modal isOpen={showError} toggle={toggle}>
-                <ModalHeader toggle={toggle}>{error.title}</ModalHeader>
-                <ModalBody>{error.body}</ModalBody>
-                <ModalFooter>
-                    <Button color="secondary" onClick={toggle}>
-                        Cancel
-                    </Button>
-                </ModalFooter>
+            {error && <Modal isOpen={error}>
+                <ModalHeader>{error.message}</ModalHeader>
+                <ModalBody>
+                    <p>{error.response.status}</p>
+                    <p>{error.response.data}</p>
+                </ModalBody>
             </Modal>
             }
         </>
