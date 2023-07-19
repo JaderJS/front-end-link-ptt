@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Property from "./pages/Property";
 import TreeView from "./components/TreeView";
 import PropertyFocus from "./pages/PropertyFocus";
+import Simulation from "./pages/Simulation";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -23,6 +24,7 @@ root.render(
         <Route path="/propertys" element={<Property />} />
         <Route path="/station/propertie" element={<PropertyFocus />} />
         <Route path="/treeview" element={<TreeView />} />
+        <Route path="/simulation" element={<Simulation />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
@@ -36,7 +38,7 @@ root.render(
       pauseOnFocusLoss
       draggable
       pauseOnHover
-      theme="dark"
+      theme="light"
     />
   </React.StrictMode>,
   document.getElementById("root")

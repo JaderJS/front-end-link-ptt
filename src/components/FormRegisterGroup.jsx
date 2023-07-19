@@ -3,20 +3,32 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 
-const FormRegisterGroup = ({ def, _id, submit, setSubmit, setResponse }) => {
+const FormRegisterGroup = ({ def, _id, submit, setSubmit }) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: 2000,
-      title: "LKR",
-      name: "LKR",
-      sinalization: "group",
-      signal: "Tom 0",
+      id: def?.id || 2000,
+      title: def?.title || "LKR",
+      name: def?.name || "LKR",
+      sinalization: def?.sinalization || "group",
+      signal: def?.signal || "Tom 0",
     },
   });
+
+  useEffect(() => {
+    reset({
+      id: def?.id || 2000,
+      title: def?.title || "LKR",
+      name: def?.name || "LKR",
+      sinalization: def?.sinalization || "group",
+      signal: def?.signal || "Tom 0",
+    });
+    console.log(def)
+  }, [def, reset]);
 
   const onSubmit = async (data) => {
     await api
@@ -40,28 +52,28 @@ const FormRegisterGroup = ({ def, _id, submit, setSubmit, setResponse }) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div class="form-floating mb-3">
-          <input class="form-control" {...register("id", { valueAsNumber: true })} placeholder="id" />
+        <div className="form-floating mb-3">
+          <input className="form-control" {...register("id", { valueAsNumber: true })} placeholder="id" />
           <label for="floatingInput">id</label>
         </div>
-        <div class="form-floating mb-3">
-          <input class="form-control" {...register("title", { required: "Preencha o titulo do grupo" })} placeholder="Titulo" />
+        <div className="form-floating mb-3">
+          <input className="form-control" {...register("title", { required: "Preencha o titulo do grupo" })} placeholder="Titulo" />
           <label for="floatingInput">Titulo</label>
         </div>
-        <div class="form-floating mb-3">
-          <input class="form-control" {...register("name", { required: "Preencha o nome do grupo" })} placeholder="Nome" />
+        <div className="form-floating mb-3">
+          <input className="form-control" {...register("name", { required: "Preencha o nome do grupo" })} placeholder="Nome" />
           <label for="floatingInput">Nome</label>
         </div>
-        <div class="form-floating mb-3">
+        <div className="form-floating mb-3">
           <input
-            class="form-control"
+            className="form-control"
             {...register("sinalization", { required: "Preencha o tipo de sinalização group/individual/all" })}
             placeholder="Sinalização"
           />
           <label for="floatingInput">Sinalização</label>
         </div>
-        <div class="form-floating mb-3">
-          <input class="form-control" {...register("signal", { required: "Preencha o tipo de sinal" })} placeholder="Sinal" />
+        <div className="form-floating mb-3">
+          <input className="form-control" {...register("signal", { required: "Preencha o tipo de sinal" })} placeholder="Sinal" />
           <label for="floatingInput">Sinal</label>
         </div>
       </form>

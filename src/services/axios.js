@@ -9,7 +9,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  if (config.method === "put" || config.method === "post") {
+  if (config.method === "put" || config.method === "post" || config.method === "delete") {
     const loadingToast = toast.promise(
       new Promise((resolve, reject) => {
         config.resolveLoadingToast = resolve;
@@ -29,7 +29,7 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => {
-    if (response.config.method === "put" || response.config.method === "post") {
+    if (response.config.method === "put" || response.config.method === "post" || response.config.method === "delete") {
       response.config.resolveLoadingToast(response);
       toast.success(`${response?.data?.msg}`, {
         position: "top-right",
@@ -47,7 +47,8 @@ api.interceptors.response.use(
   (error) => {
     if (error.config.method === "put" || error.config.method === "post") {
       error.config.rejectLoadingToast();
-      toast.error(`Ocorreu um erro na requisição: ${error?.response?.data?.message}`, {
+      // console.log(error.response.data.error);
+      toast.error(`Ocorreu um erro na requisição: ${error?.response?.data?.message} ${error?.response?.data?.error} `, {
         position: "top-right",
         autoClose: 8000,
         hideProgressBar: false,

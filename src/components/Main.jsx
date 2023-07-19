@@ -34,6 +34,9 @@ const Main = ({ children }) => {
                             <NavItem>
                                 <NavLink href="/contact">Contato</NavLink>
                             </NavItem>
+                            <NavItem>
+                                <NavLink href="/simulation">Simulação</NavLink>
+                            </NavItem>
                         </Nav>
                     </Col>
                     <Col md="9" className="content">

@@ -11,6 +11,7 @@ import {
   Button,
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
+import formatDate from "../services/functionsDate";
 
 import Map from "./Map";
 
@@ -44,7 +45,7 @@ const CardStation = ({ data }) => {
             </NavLink>
           </CardBody>
           <CardFooter>
-            {data.createdOn} {data._id}
+            {formatDate(data.createdOn)} {data._id}
           </CardFooter>
         </Card>
       )}
