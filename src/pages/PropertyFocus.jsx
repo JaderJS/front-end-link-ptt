@@ -6,7 +6,7 @@ import api from "../services/axios";
 import Map from "../components/Map";
 import { Row, Col, Button } from "reactstrap";
 import RecursiveTable from "../components/RecursiveTable";
-import ModalForm from "../components/ModalForm";
+import { ModalForm } from "../components/ModalForm";
 import FormRegisterEquipament from "../components/FormRegisterEquipament";
 import FormRegisterGroups from "../components/FormRegisterGroup";
 
@@ -19,33 +19,24 @@ const PropertyFocus = () => {
   const id = searchParams.get("id");
 
   const getPropertie = async (id) => {
-    await api.get(`/station/properties?id=${id}`).then((response) => {
-      setData(response.data);
+    await api.get(`api/property?id=${id}`).then((response) => {
+      setData(() => response.data);
     });
   };
-
-  useEffect(() => {
-    if (data) {
-      data?.estation.map((data) => {
-        setCoordinates(() => [data.lat, data.long]);
-      });
-    }
-  }, [data]);
 
   useEffect(() => {
     getPropertie(id);
   }, []);
 
-  const handleDelete = async (_id, data) => {
-    await api.delete(`/station/properties/${_id}`, { data }).then((response) => { })
+  const handleDelete = async (id) => {
+    await api.delete(`/api/property/${id}`)
   }
 
-  const handleUpdate = async (_id, data) => {
+  const handleUpdate = async (id, data) => {
     if ("group" in data) {
       setFormUpdate(data)
       return
     }
-    // await api.put(`/station/properties/${_id}`, { data })
   }
 
   return (
@@ -59,32 +50,30 @@ const PropertyFocus = () => {
               <Map coordinates={coordinates} />
             </Col>
           </Row>
-          {console.log(data)}
-          {data?.estation?.map((station) => (
-            <React.Fragment key={station._id}>
+          {data?.station?.map((station) => (
+            <React.Fragment key={station.id}>
               <Row>
-                {console.log(station)}
                 <RecursiveTable data={station} excludedColumns={["groups", "equipaments", "config"]}>
                   <Button color="warning"> Editar</Button>
-                  <Button color="danger" onClick={() => handleDelete(data._id, { station: station })}> Deletar</Button>
+                  <Button color="danger" onClick={() => handleDelete(data.id)}> Deletar</Button>
                 </RecursiveTable>
               </Row>
               <Row>
                 <Col>
                   <p>Equipaments</p>
                   <FormEquipaments data={station} _id={data._id} />
-                  {station.equipaments?.map((equipament) => (
+                  {/* {station.equipaments?.map((equipament) => (
                     <div key={equipament._id}>
                       <RecursiveTable data={equipament} excludedColumns={["config", "createdOn", "colorCode", "slot"]}>
                         <Button color="warning"> Editar</Button>
                         <Button color="danger" onClick={() => handleDelete(data._id, { equipament: equipament })}> Deletar</Button>
                       </RecursiveTable>
                     </div>
-                  ))}
+                  ))} */}
                 </Col>
                 <Col>
                   <p>Grupos</p>
-                  <FormGroups data={station} _id={data._id} />
+                  {/* <FormGroups data={station} _id={data._id} />
                   {station.groups?.map((group) => (
                     <div key={group._id}>
                       <RecursiveTable data={group} excludedColumns={["createdOn"]}>
@@ -92,7 +81,7 @@ const PropertyFocus = () => {
                         <Button color="danger" onClick={() => handleDelete(data._id, { group: group })}> Deletar</Button>
                       </RecursiveTable>
                     </div>
-                  ))}
+                  ))} */}
                 </Col>
               </Row>
             </React.Fragment>

@@ -2,7 +2,7 @@ import React from "react";
 import { Table } from "reactstrap";
 
 const RecursiveTable = ({ data, excludedColumns, children }) => {
-  excludedColumns.push("_id");
+  // excludedColumns?.push("_id");
 
   const renderTableHeaders = (obj) => {
     return (

@@ -61,26 +61,26 @@ const FormRegisterEquipament = ({ _id, submit, setSubmit }) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div class="form-floating mb-3">
-          <input class="form-control" {...register("serial", { required: true })} placeholder="Serial" />
+        <div className="form-floating mb-3">
+          <input className="form-control" {...register("serial", { required: true })} placeholder="Serial" />
           <label for="floatingInput">Serial</label>
         </div>
         <Row>
           <Col>
-            <div class="form-floating mb-3">
-              <input class="form-control" {...register("model", { required: true })} placeholder="Modelo" />
+            <div className="form-floating mb-3">
+              <input className="form-control" {...register("model", { required: true })} placeholder="Modelo" />
               <label for="floatingInput">Modelo</label>
             </div>
           </Col>
           <Col>
-            <div class="form-floating mb-3">
-              <input class="form-control" {...register("fabricant", { required: true })} placeholder="Fabricante" />
+            <div className="form-floating mb-3">
+              <input className="form-control" {...register("fabricant", { required: true })} placeholder="Fabricante" />
               <label for="floatingInput">Fabricante</label>
             </div>
           </Col>
         </Row>
-        <div class="form-floating mb-3">
-          <select class="form-control" {...register("config.0.type")}>
+        <div className="form-floating mb-3">
+          <select className="form-control" {...register("config.0.type")}>
             <option value="">Select...</option>
             <option value="digital">Digital</option>
             <option value="analog">Analógico</option>
@@ -89,8 +89,8 @@ const FormRegisterEquipament = ({ _id, submit, setSubmit }) => {
         </div>
         {selectedType === "digital" && (
           <>
-            <div class="form-floating mb-3">
-              <select class="form-control" {...register("config.0.colorCode")}>
+            <div className="form-floating mb-3">
+              <select className="form-control" {...register("config.0.colorCode")}>
                 <option value="">Select...</option>
                 {Array.from({ length: 16 }, (_, index) => (
                   <option key={index} value={index}>
@@ -100,8 +100,8 @@ const FormRegisterEquipament = ({ _id, submit, setSubmit }) => {
               </select>
               <label for="floatingInput">Código de cor</label>
             </div>
-            <div class="form-floating mb-3">
-              <select class="form-control" {...register("config.0.slot")}>
+            <div className="form-floating mb-3">
+              <select className="form-control" {...register("config.0.slot")}>
                 <option value="">Select...</option>
                 {Array.from({ length: 3 }, (_, index) => (
                   <option key={index} value={index}>
@@ -115,8 +115,8 @@ const FormRegisterEquipament = ({ _id, submit, setSubmit }) => {
         )}
         {selectedType === "analog" && (
           <>
-            <div class="form-floating mb-3">
-              <select class="form-control" {...register("config.0.silent")}>
+            <div className="form-floating mb-3">
+              <select className="form-control" {...register("config.0.silent")}>
                 <option value="">Select...</option>
                 {["CSQ", "TPL", "DPL"].map((val) => (
                   <option key={val} value={val}>
@@ -128,26 +128,26 @@ const FormRegisterEquipament = ({ _id, submit, setSubmit }) => {
             </div>
             {(selectedSilent === "TPL" || selectedSilent === "DPL") && (
               <>
-                <div class="form-floating mb-3">
-                  <input class="form-control" {...register("config.0.encoder", { valueAsNumber: true })} placeholder="Enconder" />
+                <div className="form-floating mb-3">
+                  <input className="form-control" {...register("config.0.encoder", { valueAsNumber: true })} placeholder="Enconder" />
                   <label for="floatingInput">Encoder</label>
                 </div>
-                <div class="form-floating mb-3">
-                  <input class="form-control" {...register("config.0.decoder", { valueAsNumber: true })} placeholder="Decoder" />
+                <div className="form-floating mb-3">
+                  <input className="form-control" {...register("config.0.decoder", { valueAsNumber: true })} placeholder="Decoder" />
                   <label for="floatingInput">Decoder</label>
                 </div>
               </>
             )}
           </>
         )}
-        <div class="form-floating mb-3">
-          <input class="form-control" {...register("config.0.archives.0.name", { valueAsNumber: false })} placeholder="Nome" />
+        <div className="form-floating mb-3">
+          <input className="form-control" {...register("config.0.archives.0.name", { valueAsNumber: false })} placeholder="Nome" />
           <label for="floatingInput">Nome</label>
         </div>
-        <div class="form-floating mb-3">
+        <div className="form-floating mb-3">
           <input
             type="file"
-            class="form-control"
+            className="form-control"
             id="file"
             name="config.0.archives.0.pathUrl"
             // {...register("config.0.archives.0.pathUrl", { valueAsNumber: false })}

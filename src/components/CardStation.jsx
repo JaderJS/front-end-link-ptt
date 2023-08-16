@@ -11,20 +11,19 @@ import {
   Button,
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
-import formatDate from "../services/functionsDate";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Map from "./Map";
+import { timeFromNow } from "../commons/functionTime";
 
 const CardStation = ({ data }) => {
-  const [cordinates, setCordinates] = useState([0, 0]);
+  const [cordinates, setCordinates] = useState([-12, -58]);
 
   useEffect(() => {
-    data.estation.map((data) => {
-      const lat = parseFloat(data.lat);
-      const long = parseFloat(data.long);
-      setCordinates(() => [lat, long]);
-    });
-    console.log(data._id);
+    const cord = data.station.map((item) => [+item.latitude, +item.longitude])
+    console.log(cord)
+    // setCordinates(() => (...cord))
   }, [data]);
 
   return (
@@ -33,19 +32,19 @@ const CardStation = ({ data }) => {
         <Card style={{ width: "24rem" }}>
           <CardBody>
             <Map coordinates={cordinates} />
-            <CardTitle tag="h5">{data.property}</CardTitle>
+            <CardTitle tag="h5">{data.title}</CardTitle>
             <CardSubtitle className="mb-2 text-muted" tag="h6">
               {data.gerency}
             </CardSubtitle>
             <CardText>{data.description}</CardText>
             <NavLink
-              to={{ pathname: "/station/propertie", search: `?id=${data._id}` }}
+              to={{ pathname: "/station/propertie", search: `?id=${data.id}` }}
             >
-              <Button>continue..</Button>
+              <Button><FontAwesomeIcon icon={faSearch} /></Button>
             </NavLink>
           </CardBody>
           <CardFooter>
-            {formatDate(data.createdOn)} {data._id}
+            {timeFromNow(data.createdAt)}
           </CardFooter>
         </Card>
       )}

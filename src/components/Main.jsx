@@ -3,11 +3,13 @@ import { Container, Navbar, NavbarBrand, Nav, NavItem, NavLink, NavbarText, Row,
 import { FaUser } from 'react-icons/fa';
 
 const Main = ({ children }) => {
+
+
     return (
         <div>
             <Navbar color="light" light expand="md">
                 <Container>
-                    <NavbarBrand href="/">Link PTT</NavbarBrand>
+                    <NavbarBrand href="/home">LinkPtt</NavbarBrand>
                     <Nav className="ml-auto" navbar>
                         <NavItem>
                             <NavLink href="#">
@@ -36,6 +38,12 @@ const Main = ({ children }) => {
                             </NavItem>
                             <NavItem>
                                 <NavLink href="/simulation">Simulação</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="/budget">Orçamento</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="/equipament">Equipamentos</NavLink>
                             </NavItem>
                         </Nav>
                     </Col>

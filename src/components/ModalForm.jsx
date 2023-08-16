@@ -27,4 +27,4 @@ const ModalForm = ({ title, show, setShow, setSubmit, children }) => {
   );
 };
 
-export default ModalForm;
+export {ModalForm};

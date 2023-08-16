@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 const api = axios.create({
   baseURL: "http://localhost:3001",
   headers: {
-    Authorization: "",
+    Authorization: "Bearer " + localStorage.getItem("authT") || "",
   },
 });
 
@@ -17,7 +17,6 @@ api.interceptors.request.use((config) => {
       }),
       {
         pending: "Promise is pending",
-        // success: "Promise resolved 👌",
         theme: "light",
       }
     );
@@ -47,8 +46,10 @@ api.interceptors.response.use(
   (error) => {
     if (error.config.method === "put" || error.config.method === "post") {
       error.config.rejectLoadingToast();
-      // console.log(error.response.data.error);
-      toast.error(`Ocorreu um erro na requisição: ${error?.response?.data?.message} ${error?.response?.data?.error} `, {
+      const { msg } = error.response.data;
+      const { status } = error.response.data;
+      console.log(error.response);
+      toast.error(`Ocorreu um erro na requisição: ${msg || ""} ${error.response.data.error || ""} ${status || ""} `, {
         position: "top-right",
         autoClose: 8000,
         hideProgressBar: false,

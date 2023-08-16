@@ -39,7 +39,8 @@ const TesteUseForm = ({ submit, setSubmit }) => {
   }, [submit]);
 
   const onSubmit = async (data) => {
-    await api.post("/station/properties", data).then((response) => {});
+    // await api.post("/station/properties", data).then((response) => {});
+    await api.post('/api/property', data);
   };
 
   return (
@@ -53,7 +54,7 @@ const TesteUseForm = ({ submit, setSubmit }) => {
         <label htmlFor="floatingInput">Gerente</label>
       </div>
       <Row>
-        <Col>classfor
+        <Col>
           <div className="form-floating mb-3">
             <input className="form-control" {...register("estation[0].lat", { valueAsNumber: true })} placeholder="Latitude" />
             <label htmlFor="floatingInput">Latitude</label>
@@ -103,7 +104,7 @@ const TesteUseForm = ({ submit, setSubmit }) => {
                     </option>
                   ))}
                 </select>
-                <label htmlFor="floatingInput">Frequência TX</label>
+                <label htmlFor="floatingInput">Color code</label>
               </div>
               <div className="form-floating mb-3">
                 <select className="form-control" {...register("estation[0].config.slot", { valueAsNumber: true })}>
@@ -114,7 +115,7 @@ const TesteUseForm = ({ submit, setSubmit }) => {
                     </option>
                   ))}
                 </select>
-                <label htmlFor="floatingInput">Frequência TX</label>
+                <label htmlFor="floatingInput">Slot</label>
               </div>
             </Col>
           </>

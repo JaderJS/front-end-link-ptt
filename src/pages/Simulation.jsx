@@ -1,26 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { get, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import api from "../services/axios";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Row, Col, Alert } from "reactstrap";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Row, Col } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMicrophoneLines } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faFloppyDisk, faMicrophoneLines, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faBan } from '@fortawesome/free-solid-svg-icons';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import Main from "../components/Main";
+import RegisterSimulation from "../components/Forms/RegisterSimulation";
+import { ModalForm as ModalSave } from "../components/ModalForm";
+import { SelectComponent } from "../components/MultiSelect";
 
 function Simulation() {
     const [show, setShow] = useState(false)
+
+    const [showCreate, setShowCreate] = useState(false)
+    const [submit, setSubmit] = useState(false)
+    const [options, setOptions] = useState()
+    const [selectId, setSelectId] = useState()
+
     const [data, setData] = useState({
         properties: [
             {
                 id: 1,
                 name: "Fazenda 1",
                 slot1: {
-                    groups: [{ id: 1000, activated: false, status: "idle" }, { id: 1001, activated: false, status: "idle" }, { id: 1002, activated: false, status: "idle" }, { id: 1002, activated: false, status: "idle" }, { id: 1002, activated: false, status: "idle" }],
+                    groups: [{ id: 1000, activated: false, status: "idle" }, { id: 1001, activated: false, status: "idle" }],
                     activated: false
                 },
                 slot2: {
@@ -107,67 +116,115 @@ function Simulation() {
             return 'primary';
         }
         return
+    };
+
+    const getSimulations = async () => {
+        await api.get('/api/simulation').then((response) => {
+            setOptions(() => {
+                const flag = response.data.map((val) => ({ value: val.id, label: val.name }));
+                return flag;
+            });
+        });
+    };
+
+    const getSimulationId = async (id) => {
+        if (!id) {
+            return;
+        }
+        await api.get(`/api/simulation?id=${id}`).then((response) => {
+            console.log(response);
+            setData(() => response.data.content);
+        });
+    };
+
+    const dropSimulation = async (id) => {
+        if (!id) {
+            return;
+        }
+        await api.delete(`/api/simulation/${id}`).then((response) => {
+            // setData(() => response.data.content)
+        });
     }
+
+    useEffect(() => {
+        getSimulations();
+    }, []);
 
     return (
         <Main>
-            {console.log(data)}
             <ModalForm show={show} setShow={setShow} setData={setData} />
-            <Button onClick={() => setShow(true)}>Adicionar sistema</Button>
-            <Row >
-                {data.properties.map((property, index) => (
-                    <div key={property.id} className="card m-2" style={{ width: "20rem" }}>
-                        <div className="card-header">
-                            <Row>
-                                <Col>
-                                    <h5 className="card-title">{property.name}</h5>
-                                </Col>
-                                <Col>
-                                    <Button color="danger" onClick={() => removeProprety(index)}>
-                                        <FontAwesomeIcon icon={faTrash} />
-                                    </Button>
-                                </Col>
-                            </Row>
+            <div style={{ display: 'flex', width: '100%' }}>
+                <div style={{ flex: '1', display: 'flex', justifyContent: 'center' }}>
+                    <Button className='mx-1' color='primary' onClick={() => setShow(true)}><FontAwesomeIcon icon={faPlus} /></Button>
+                    <Button className='mx-1' color='success' onClick={() => setShowCreate(true)}><FontAwesomeIcon icon={faFloppyDisk} /></Button>
+                    <Button className='mx-1' color='success' onClick={() => getSimulationId(selectId?.id)}><FontAwesomeIcon icon={faDownload} /></Button>
+                </div>
+
+                <div style={{ flex: '2' }}>
+                    <SelectComponent options={options} setSelect={setSelectId} />
+                </div>
+                <div style={{ flex: '1', display: 'flex', justifyContent: 'center' }}>
+                    <Button className='mx-1' onClick={() => dropSimulation(selectId?.id)}><FontAwesomeIcon icon={faTrash} /></Button>
+                </div>
+
+
+                <ModalSave title={"Cadastro simulação"} show={showCreate} setShow={setShowCreate} submit={submit} setSubmit={setSubmit}>
+                    <RegisterSimulation submit={submit} setSubmit={setSubmit} values={data} />
+                </ModalSave>
+
+            </div>
+
+            <div style={{ display: 'flex' }}>
+                {data.properties?.map((property, index) => (
+                    <div key={index} className="card" style={{ width: "18rem", margin: '0.8rem' }}>
+                        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <div style={{ flex: '2' }}>
+                                <span className="card-title">{property.name}</span>
+                            </div>
+                            <div style={{ flex: '1' }}>
+                                <div color="danger" onClick={() => removeProprety(index)} style={{ cursor: 'pointer' }}>
+                                    <FontAwesomeIcon icon={faTrash} opacity='0.6' />
+                                </div>
+                            </div>
+
                         </div>
                         <div className="card-body">
-
-                            <ul className="list-group list-group-flush">
-                                {Object.keys(property).map(slotKey => {
-                                    if (slotKey !== "name" && slotKey !== "id") {
-                                        return (
-                                            <li key={slotKey} className="list-group-item">
-                                                <h6 className="card-subtitle mb-2 text-body-secondary text-center">{slotKey.toUpperCase()}</h6>
-                                                <div className="d-flex flex-wrap ">
-                                                    {property[slotKey].groups.map((group, groupIndex) => (
-                                                        <Col className="my-1" key={groupIndex}>
-                                                            <Button
-                                                                size="sm"
-                                                                color={changeColor(group.status)}
-                                                                onMouseDown={() => handleGroupActivation(property.id, group.id, slotKey, true)}
-                                                                onMouseUp={() => handleGroupActivation(property.id, group.id, slotKey, false)}
-                                                            >
-                                                                <div>
-                                                                    {group.activated && <FontAwesomeIcon icon={faMicrophoneLines} bounce />}
-                                                                    {group.status === "receiving" && <FontAwesomeIcon icon={faBan} />}
-                                                                    {!group.activated && group.status === "transmitting" && <FontAwesomeIcon icon={faVolumeHigh} beatFade />}
-                                                                    {group.status === "idle" && <FontAwesomeIcon icon={faArrowsRotate} spin />}
-                                                                </div>
-                                                                {group.id}
-                                                            </Button>
-                                                        </Col>
-                                                    ))}
-                                                </div>
-                                            </li>
-                                        );
-                                    }
-                                    return null;
-                                })}
-                            </ul>
+                            {Object.keys(property).map(slotKey => {
+                                if (slotKey !== "name" && slotKey !== "id") {
+                                    return (
+                                        <div key={slotKey} className="list-group-item">
+                                            <h6 className="text-body-secondary text-center">{slotKey.toUpperCase()}</h6>
+                                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                                                {property[slotKey].groups.map((group, groupIndex) => (
+                                                    <div style={{ display: 'flex' }} key={groupIndex}>
+                                                        <Button style={{ flex: 'auto', margin: '0.2rem' }}
+                                                            size="sm"
+                                                            color={changeColor(group.status)}
+                                                            onMouseDown={() => handleGroupActivation(property.id, group.id, slotKey, true)}
+                                                            onMouseUp={() => handleGroupActivation(property.id, group.id, slotKey, false)}
+                                                        >
+                                                            <div >
+                                                                {group.activated && <FontAwesomeIcon icon={faMicrophoneLines} bounce />}
+                                                                {group.status === "receiving" && <FontAwesomeIcon icon={faBan} />}
+                                                                {!group.activated && group.status === "transmitting" && <FontAwesomeIcon icon={faVolumeHigh} beatFade />}
+                                                                {group.status === "idle" && <FontAwesomeIcon icon={faArrowsRotate} spin />}
+                                                            </div>
+                                                            {group.id}
+                                                        </Button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            })}
                         </div>
                     </div>
                 ))}
-            </Row>
-        </Main>
+            </div>
+
+        </Main >
     );
 }
 
@@ -211,7 +268,6 @@ const FormRegisterRepeater = ({ submit, setSubmit, setData }) => {
     } = useForm({
         defaultValues: {
             property: {
-                id: 100,
                 name: "Fazenda A",
                 slot1: {
                     groups: [],
@@ -232,10 +288,8 @@ const FormRegisterRepeater = ({ submit, setSubmit, setData }) => {
         }
     }, [submit]);
 
-    const onSubmit = async (data) => {
-        console.log(data);
-        setData((previus) => ({ ...previus, properties: [...previus.properties, data.property] }))
-        // await api.post("/station/properties", data).then((response) => { });
+    const onSubmit = (data) => {
+        setData((previus) => ({ ...previus, properties: [...previus.properties, data.property] }));
     };
 
 
@@ -245,7 +299,7 @@ const FormRegisterRepeater = ({ submit, setSubmit, setData }) => {
         }
         const property = watch("property");
         const newGroup = {
-            id: valueId,
+            id: +valueId,
             activated: false,
             status: 'idle'
         }
@@ -265,6 +319,7 @@ const FormRegisterRepeater = ({ submit, setSubmit, setData }) => {
         setShowMenu(true);
         setGroupId({ slot, index });
     };
+
 
     const renderContextMenu = () => {
         const style = {
